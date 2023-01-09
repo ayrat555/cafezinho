@@ -5,14 +5,25 @@ defmodule Cafezinho.MixProject do
     [
       app: :cafezinho,
       version: "0.1.0",
-      elixir: "~> 1.13",
+      elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: "Placeholder for now",
       package: [
         maintainers: ["Ayrat Badykov"],
         licenses: ["MIT"],
-        links: %{"GitHub" => "https://github.com/ayrat555/cafezinho"}
+        links: %{"GitHub" => "https://github.com/ayrat555/cafezinho"},
+        files: [
+          "mix.exs",
+          "native/cafezinho/.cargo/config.toml",
+          "native/cafezinho/src",
+          "native/cafezinho/Cargo.toml",
+          "native/cafezinho/Cargo.lock",
+          "lib",
+          "LICENSE",
+          "README.md",
+          "CHANGELOG.md"
+        ]
       ]
     ]
   end

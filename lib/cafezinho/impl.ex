@@ -5,4 +5,7 @@ defmodule Cafezinho.Impl do
 
   def keypair_from_seed(_seed),
     do: :erlang.nif_error(:nif_not_loaded)
+
+  def sign(_data, _secret_key),
+    do: :erlang.nif_error(:nif_not_loaded)
 end

@@ -5,14 +5,25 @@ defmodule Cafezinho.MixProject do
     [
       app: :cafezinho,
       version: "0.1.0",
-      elixir: "~> 1.13",
+      elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: "Placeholder for now",
       package: [
         maintainers: ["Ayrat Badykov"],
         licenses: ["MIT"],
-        links: %{"GitHub" => "https://github.com/ayrat555/cafezinho"}
+        links: %{"GitHub" => "https://github.com/ayrat555/cafezinho"},
+        files: [
+          "mix.exs",
+          "native/cafezinho/.cargo/config.toml",
+          "native/cafezinho/src",
+          "native/cafezinho/Cargo.toml",
+          "native/cafezinho/Cargo.lock",
+          "lib",
+          "LICENSE",
+          "README.md",
+          "CHANGELOG.md"
+        ]
       ]
     ]
   end
@@ -28,7 +39,9 @@ defmodule Cafezinho.MixProject do
   defp deps do
     [
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:rustler, "~> 0.26"}
+      {:rustler, "~> 0.26"},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false}
 
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}

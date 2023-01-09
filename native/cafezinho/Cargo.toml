@@ -2,7 +2,7 @@
 name = "cafezinho"
 version = "0.1.0"
 authors = []
-edition = "2018"
+edition = "2021"
 
 [lib]
 name = "cafezinho"
@@ -11,3 +11,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 rustler = "0.26.0"
+dryoc = "0.4.3"

@@ -1,8 +1,7 @@
-use dryoc::sign::IncrementalSigner;
 use dryoc::sign::PublicKey;
 use dryoc::sign::SecretKey;
-use dryoc::sign::Signature;
 use dryoc::sign::SigningKeyPair;
+use dryoc::types::StackByteArray;
 use rustler::Binary;
 use rustler::Encoder;
 use rustler::Env;
@@ -39,22 +38,22 @@ fn keypair_from_seed<'a>(env: Env<'a>, seed: Binary) -> Term<'a> {
 
 #[rustler::nif]
 fn sign<'a>(env: Env<'a>, data: Binary, private_key: Binary) -> Term<'a> {
-    let secret_key_arr: [u8; 64] = match private_key.as_slice().try_into() {
+    let secret_key: StackByteArray<64> = match private_key.as_slice().try_into() {
         Ok(array) => array,
         Err(_) => return (atoms::error(), atoms::wrong_secret_key_size()).encode(env),
     };
 
-    let mut signer = IncrementalSigner::new();
-
-    signer.update(&data.to_vec());
-
-    let signature: Signature = match signer.finalize(&secret_key_arr) {
+    let signature = match SigningKeyPair::<PublicKey, SecretKey>::from_secret_key(secret_key)
+        .sign_with_defaults(data.as_slice())
+    {
         Ok(signature) => signature,
         Err(_) => return (atoms::error(), atoms::signing_failed()).encode(env),
     };
 
+    let signature_raw = signature.into_parts().0;
+
     let mut signature_bin = NewBinary::new(env, 64);
-    signature_bin.as_mut_slice().copy_from_slice(&signature);
+    signature_bin.as_mut_slice().copy_from_slice(&signature_raw);
 
     (atoms::ok(), Binary::from(signature_bin)).encode(env)
 }

@@ -4,11 +4,11 @@ defmodule Cafezinho.MixProject do
   def project do
     [
       app: :cafezinho,
-      version: "0.1.0",
+      version: "0.2.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      description: "Placeholder for now",
+      description: "NIF for Ed25519 curve functions",
       package: [
         maintainers: ["Ayrat Badykov"],
         licenses: ["MIT"],

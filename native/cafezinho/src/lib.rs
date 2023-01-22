@@ -1,5 +1,6 @@
 use dryoc::sign::PublicKey;
 use dryoc::sign::SecretKey;
+use dryoc::sign::SignedMessage;
 use dryoc::sign::SigningKeyPair;
 use dryoc::types::StackByteArray;
 use rustler::Binary;
@@ -14,6 +15,9 @@ mod atoms {
         error,
         wrong_seed_size,
         wrong_secret_key_size,
+        wrong_public_key_size,
+        wrong_signature_size,
+        invalid_signature,
         signing_failed
     }
 }
@@ -26,14 +30,9 @@ fn keypair_from_seed<'a>(env: Env<'a>, seed: Binary) -> Term<'a> {
     };
 
     let keypair = SigningKeyPair::<PublicKey, SecretKey>::from_seed(&seed_arr);
+    let serialized_keypair = serialize_keypair(env, keypair);
 
-    let mut pk_bin = NewBinary::new(env, 32);
-    pk_bin.as_mut_slice().copy_from_slice(&keypair.public_key);
-
-    let mut sk_bin = NewBinary::new(env, 64);
-    sk_bin.as_mut_slice().copy_from_slice(&keypair.secret_key);
-
-    ((atoms::ok(), (Binary::from(pk_bin), Binary::from(sk_bin)))).encode(env)
+    (atoms::ok(), serialized_keypair).encode(env)
 }
 
 #[rustler::nif]
@@ -58,4 +57,55 @@ fn sign<'a>(env: Env<'a>, data: Binary, private_key: Binary) -> Term<'a> {
     (atoms::ok(), Binary::from(signature_bin)).encode(env)
 }
 
-rustler::init!("Elixir.Cafezinho.Impl", [keypair_from_seed, sign]);
+#[rustler::nif]
+fn generate<'a>(env: Env<'a>) -> Term<'a> {
+    let keypair = SigningKeyPair::<PublicKey, SecretKey>::gen();
+
+    let serialized_keypair = serialize_keypair(env, keypair);
+
+    serialized_keypair.encode(env)
+}
+
+#[rustler::nif]
+fn verify<'a>(env: Env<'a>, signature: Binary, message: Binary, public_key: Binary) -> Term<'a> {
+    let signature: [u8; 64] = match signature.as_slice().try_into() {
+        Ok(array) => array,
+        Err(_) => return (atoms::error(), atoms::wrong_signature_size()).encode(env),
+    };
+
+    let public_key: StackByteArray<32> = match public_key.as_slice().try_into() {
+        Ok(array) => array,
+        Err(_) => return (atoms::error(), atoms::wrong_public_key_size()).encode(env),
+    };
+
+    let message_with_signature = [&signature, message.as_slice()].concat();
+
+    let signed_message =
+        match SignedMessage::<Vec<u8>, Vec<u8>>::from_bytes(&message_with_signature) {
+            Ok(signed_message) => signed_message,
+            Err(_) => return (atoms::error(), atoms::invalid_signature()).encode(env),
+        };
+
+    match signed_message.verify(&public_key) {
+        Ok(()) => (atoms::ok()).encode(env),
+        Err(_) => return (atoms::error(), atoms::invalid_signature()).encode(env),
+    }
+}
+
+fn serialize_keypair<'a>(
+    env: Env<'a>,
+    keypair: SigningKeyPair<PublicKey, SecretKey>,
+) -> (Binary, Binary) {
+    let mut pk_bin = NewBinary::new(env, 32);
+    pk_bin.as_mut_slice().copy_from_slice(&keypair.public_key);
+
+    let mut sk_bin = NewBinary::new(env, 64);
+    sk_bin.as_mut_slice().copy_from_slice(&keypair.secret_key);
+
+    (Binary::from(pk_bin), Binary::from(sk_bin))
+}
+
+rustler::init!(
+    "Elixir.Cafezinho.Impl",
+    [keypair_from_seed, sign, generate, verify]
+);

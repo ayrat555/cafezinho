@@ -13,7 +13,7 @@ dependencies in `mix.exs`:
 
 ```elixir
   [
-    {:cafezinho, "~> 0.3"}
+    {:cafezinho, "~> 0.3.1"}
   ]
 ```
 

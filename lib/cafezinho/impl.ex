@@ -9,5 +9,5 @@ defmodule Cafezinho.Impl do
 
   def verify(_signature, _message, _public_key), do: :erlang.nif_error(:nif_not_loaded)
 
-  def generate(), do: :erlang.nif_error(:nif_not_loaded)
+  def generate, do: :erlang.nif_error(:nif_not_loaded)
 end

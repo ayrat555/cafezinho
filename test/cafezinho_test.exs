@@ -49,4 +49,50 @@ defmodule CafezinhoTest do
                )
     end
   end
+
+  describe "generate/0" do
+    test "generates a key pari" do
+      assert {public_key, secret_key} = Cafezinho.generate()
+
+      assert 32 == byte_size(public_key)
+      assert 64 == byte_size(secret_key)
+    end
+  end
+
+  describe "verify/3" do
+    test "verifies a signature" do
+      message = "hello"
+      assert {public_key, secret_key} = Cafezinho.generate()
+
+      assert {:ok, signature} = Cafezinho.sign(message, secret_key)
+
+      assert :ok = Cafezinho.verify(signature, message, public_key)
+
+      assert {:error, :invalid_signature} =
+               Cafezinho.verify(signature, message, :crypto.strong_rand_bytes(32))
+    end
+
+    test "fails to verify a signature" do
+      message = "goodbye"
+      assert {_public_key, secret_key} = Cafezinho.generate()
+      assert {:ok, signature} = Cafezinho.sign(message, secret_key)
+
+      assert {:error, :invalid_signature} =
+               Cafezinho.verify(signature, message, :crypto.strong_rand_bytes(32))
+    end
+
+    test "fails if signature size is wrong" do
+      assert {:error, :wrong_signature_size} =
+               Cafezinho.verify(<<1>>, <<1>>, :crypto.strong_rand_bytes(32))
+    end
+
+    test "fails if public key size is wrong" do
+      assert {:error, :wrong_public_key_size} =
+               Cafezinho.verify(
+                 :crypto.strong_rand_bytes(64),
+                 <<1>>,
+                 :crypto.strong_rand_bytes(55)
+               )
+    end
+  end
 end

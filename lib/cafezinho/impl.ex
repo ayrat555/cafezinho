@@ -1,7 +1,14 @@
 defmodule Cafezinho.Impl do
   @moduledoc false
 
-  use Rustler, otp_app: :cafezinho, crate: :cafezinho
+  version = Mix.Project.config()[:version]
+
+  use RustlerPrecompiled,
+    otp_app: :cafezinho,
+    crate: :cafezinho,
+    base_url: "https://github.com/ayrat555/cafezinho/releases/download/v#{version}",
+    force_build: System.get_env("CAFEZINHO_BUILD") in ["1", "true"],
+    version: version
 
   def keypair_from_seed(_seed), do: :erlang.nif_error(:nif_not_loaded)
 

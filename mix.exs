@@ -1,11 +1,13 @@
 defmodule Cafezinho.MixProject do
   use Mix.Project
 
+  @version "0.4.0"
+
   def project do
     [
       app: :cafezinho,
-      version: "0.3.1",
-      elixir: "~> 1.14",
+      version: @version,
+      elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: "NIF for Ed25519 curve functions",
@@ -39,10 +41,10 @@ defmodule Cafezinho.MixProject do
   defp deps do
     [
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:rustler, "~> 0.26"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false}
-
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:rustler, ">= 0.0.0", optional: true},
+      {:rustler_precompiled, "~> 0.6"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]

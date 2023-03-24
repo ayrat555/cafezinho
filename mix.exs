@@ -24,7 +24,8 @@ defmodule Cafezinho.MixProject do
           "lib",
           "LICENSE",
           "README.md",
-          "CHANGELOG.md"
+          "CHANGELOG.md",
+          "checksum-*.exs"
         ]
       ]
     ]

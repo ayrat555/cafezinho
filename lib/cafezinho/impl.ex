@@ -7,7 +7,8 @@ defmodule Cafezinho.Impl do
     otp_app: :cafezinho,
     crate: :cafezinho,
     base_url: "https://github.com/ayrat555/cafezinho/releases/download/v#{version}",
-    force_build: System.get_env("CAFEZINHO_BUILD") in ["1", "true"],
+    force_build: System.get_env("RUSTLER_BUILD") in ["1", "true"],
+    targets: Enum.uniq(["x86_64-unknown-freebsd" | RustlerPrecompiled.Config.default_targets()]),
     version: version
 
   def keypair_from_seed(_seed), do: :erlang.nif_error(:nif_not_loaded)

@@ -11,7 +11,7 @@ dependencies in `mix.exs`:
 
 ```elixir
   [
-    {:cafezinho, "~> 0.4.0"}
+    {:cafezinho, "~> 0.4.1"}
   ]
 ```
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 (2023-09-06)
+
+  * Update rustler to 0.29 - [#10](https://github.com/ayrat555/cafezinho/pull/10)
+
 ## 0.4.0 (2023-03-24)
 
   * Use rustler_precompiled - [#7](https://github.com/ayrat555/cafezinho/pull/7)

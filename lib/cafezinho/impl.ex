@@ -9,6 +9,7 @@ defmodule Cafezinho.Impl do
     base_url: "https://github.com/ayrat555/cafezinho/releases/download/v#{version}",
     force_build: System.get_env("RUSTLER_BUILD") in ["1", "true"],
     targets: Enum.uniq(["x86_64-unknown-freebsd" | RustlerPrecompiled.Config.default_targets()]),
+    nif_versions: ["2.15", "2.16"],
     version: version
 
   def keypair_from_seed(_seed), do: :erlang.nif_error(:nif_not_loaded)

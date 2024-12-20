@@ -10,5 +10,5 @@ path = "src/lib.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
-rustler = "0.32"
-dryoc = "0.5"
+rustler = "0.35"
+dryoc = "0.6"

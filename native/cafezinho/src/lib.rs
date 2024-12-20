@@ -104,3 +104,5 @@ fn serialize_keypair<'a>(
 
     (Binary::from(pk_bin), Binary::from(sk_bin))
 }
+
+rustler::init!("Elixir.Cafezinho.Impl");

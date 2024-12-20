@@ -95,7 +95,7 @@ fn verify<'a>(env: Env<'a>, signature: Binary, message: Binary, public_key: Bina
 fn serialize_keypair<'a>(
     env: Env<'a>,
     keypair: SigningKeyPair<PublicKey, SecretKey>,
-) -> (Binary, Binary) {
+) -> (Binary<'a>, Binary<'a>) {
     let mut pk_bin = NewBinary::new(env, 32);
     pk_bin.as_mut_slice().copy_from_slice(&keypair.public_key);
 
@@ -105,7 +105,4 @@ fn serialize_keypair<'a>(
     (Binary::from(pk_bin), Binary::from(sk_bin))
 }
 
-rustler::init!(
-    "Elixir.Cafezinho.Impl",
-    [keypair_from_seed, sign, generate, verify]
-);
+rustler::init!("Elixir.Cafezinho.Impl");

@@ -45,7 +45,7 @@ defmodule Cafezinho.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:rustler, ">= 0.0.0", optional: true},
-      {:rustler_precompiled, "~> 0.7"}
+      {:rustler_precompiled, "~> 0.8"}
     ]
   end
 end

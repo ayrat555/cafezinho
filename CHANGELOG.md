@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.4 (2025-07-17)
+
+  * update rustler to 0.36 and dryoc to 0.7 - [#13](https://github.com/ayrat555/cafezinho/pull/13)
+  * add function to validate points - [#14](https://github.com/ayrat555/cafezinho/pull/14)
+
 ## 0.4.3 (2024-12-23)
 
   * update rustler to 0.35 and dryoc to 0.6 - [#12](https://github.com/ayrat555/cafezinho/pull/12)

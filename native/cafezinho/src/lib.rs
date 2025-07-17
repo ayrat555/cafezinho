@@ -2,6 +2,7 @@ use dryoc::sign::PublicKey;
 use dryoc::sign::SecretKey;
 use dryoc::sign::SignedMessage;
 use dryoc::sign::SigningKeyPair;
+use dryoc::classic::crypto_core::crypto_core_ed25519_is_valid_point_relaxed ;
 use dryoc::types::StackByteArray;
 use rustler::Binary;
 use rustler::Encoder;
@@ -14,6 +15,7 @@ mod atoms {
         ok,
         error,
         wrong_seed_size,
+        wrong_key_size,
         wrong_secret_key_size,
         wrong_public_key_size,
         wrong_signature_size,
@@ -55,6 +57,19 @@ fn sign<'a>(env: Env<'a>, data: Binary, private_key: Binary) -> Term<'a> {
     signature_bin.as_mut_slice().copy_from_slice(&signature_raw);
 
     (atoms::ok(), Binary::from(signature_bin)).encode(env)
+}
+
+#[rustler::nif]
+fn valid_point<'a>(env: Env<'a>, key: Binary) -> Term<'a> {
+    let key_arr: [u8; 32] = match key.as_slice().try_into() {
+        Ok(array) => array,
+        Err(_) => return (atoms::error(), atoms::wrong_key_size()).encode(env),
+    };
+
+
+    let result = crypto_core_ed25519_is_valid_point_relaxed(&key_arr);
+
+    (atoms::ok(), result.encode(env)).encode(env)
 }
 
 #[rustler::nif]

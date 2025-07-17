@@ -83,4 +83,24 @@ defmodule Cafezinho do
   def generate do
     Impl.generate()
   end
+
+  @doc """
+  Validates if key is on Ed25519 curve
+
+  ## Examples
+
+      iex> {<<public_key::binary-size(32)>>, _} = Cafezinho.generate()
+      iex> Cafezinho.valid_point?(public_key)
+      true
+
+      iex> Cafezinho.valid_point?(<<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>>)
+      false
+  """
+  @spec valid_point?(binary()) :: boolean()
+  def valid_point?(key) do
+    case Impl.valid_point(key) do
+      {:ok, true} -> true
+      _ -> false
+    end
+  end
 end

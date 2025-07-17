@@ -95,4 +95,55 @@ defmodule CafezinhoTest do
                )
     end
   end
+
+  describe "valid_point?/1" do
+    test "invalidates wrong key size" do
+      refute Cafezinho.valid_point?(<<1>>)
+    end
+
+    test "random tests" do
+      Enum.each(1..100_000, fn _i ->
+        assert {public_key, _secret_key} = Cafezinho.generate()
+
+        assert Cafezinho.valid_point?(public_key)
+      end)
+    end
+  end
+
+  # Reworked from http://ed25519.cr.yp.to/python/sign.input
+  # sk+pk"," pk"," m"," sig+m
+  #
+  # copied from  ed25519_ex
+  test "passed tests from ed25519_ex" do
+    "test/fixtures/tests.txt"
+    |> File.stream!()
+    |> Stream.map(fn s ->
+      {<<s::binary-size(64), p::binary-size(64)>>, dp, m, <<sig::binary-size(128), dm::binary>>} =
+        String.split(s, ":") |> Enum.take(4) |> List.to_tuple()
+
+      assert p == dp, "Duplicate public key: " <> dp
+      assert m == dm, "Duplicate message: " <> dm
+
+      sk = from_hex(s)
+      pk = from_hex(p)
+      ms = from_hex(m)
+      si = from_hex(sig)
+
+      assert Cafezinho.sign(ms, sk <> pk) == {:ok, si}
+      assert :ok == Cafezinho.verify(si, ms, pk)
+      assert Cafezinho.valid_point?(pk)
+    end)
+    |> Stream.run()
+  end
+
+  def from_hex(<<>>), do: ""
+
+  def from_hex(s) do
+    size = div(byte_size(s), 2)
+    {n, ""} = s |> Integer.parse(16)
+    zero_pad(:binary.encode_unsigned(n), size)
+  end
+
+  def zero_pad(s, size) when byte_size(s) == size, do: s
+  def zero_pad(s, size) when byte_size(s) < size, do: zero_pad(<<0>> <> s, size)
 end

@@ -2,7 +2,7 @@
 
 ## 0.4.5 (2026-04-22)
 
-  * update rustler to 0.37.3 - [#13](https://github.com/ayrat555/cafezinho/pull/13)
+  * update rustler to 0.37.3 - [#16](https://github.com/ayrat555/cafezinho/pull/16)
 
 ## 0.4.4 (2025-07-17)
 

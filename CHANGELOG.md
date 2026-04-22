@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.5 (2026-04-22)
+
+  * update rustler to 0.37.3 - [#13](https://github.com/ayrat555/cafezinho/pull/13)
+
 ## 0.4.4 (2025-07-17)
 
   * update rustler to 0.36 and dryoc to 0.7 - [#13](https://github.com/ayrat555/cafezinho/pull/13)

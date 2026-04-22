@@ -49,11 +49,14 @@ jobs:
           - pair:
               elixir: 1.18.4
               otp: 27.2.1
+          - pair:
+              elixir: 1.19.5
+              otp: 28.4
             lint: lint
     steps:
       - uses: actions/checkout@v4
 
-      - uses: erlef/setup-beam@v1.20.4
+      - uses: erlef/setup-beam@v1.24.0
         with:
           otp-version: ${{ matrix.pair.otp }}
           elixir-version: ${{ matrix.pair.elixir }}
